@@ -1,12 +1,10 @@
-(ns clj-aoc.2021.dec.01.part2
+(ns clj-aoc.2021.01.part1
   (:use [clj-aoc.utils])
   (:require [clojure.string :as s :refer [split]]
             [clojure.core.match :refer [match]]))
 
 (defn solve [input]
-  (->> (partition 3 1 input)
-       (mapv sum)
-       (partition 2 1)
+  (->> (partition 2 1 input)
        (filter #(apply < %))
        (count)))
 
@@ -18,4 +16,4 @@
 (defn -main [input-file]
   (solve (prepare input-file)))
 
-(-main "src/clj_aoc/2021/dec/01/input/part2.txt")
+(-main "src/clj_aoc/2021/01/input.txt")

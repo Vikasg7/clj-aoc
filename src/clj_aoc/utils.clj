@@ -58,3 +58,6 @@
 
 (defn pair-mod [a b]
   (mapv mod a b))
+
+(defn to-dec [str]
+  (Integer/parseInt str 2))

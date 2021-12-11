@@ -1,18 +1,17 @@
-(ns clj-aoc.2021.dec.02.part2
+(ns clj-aoc.2021.02.part1
   (:use [clj-aoc.utils])
   (:require [clojure.string :as s :refer [split]]
             [clojure.core.match :refer [match]]))
 
-(defn steps [[a f d] step]
+(defn steps [[f d] step]
   (match (vec step)
-    ["forward" x] [a       (+ f x) (+ d (* x a))]
-    ["down"    x] [(+ a x) f       d]
-    ["up"      x] [(- a x) f       d]))
+    ["forward" x] [(+ f x) d]
+    ["down"    x] [f       (+ d x)]
+    ["up"      x] [f       (- d x)]))
 
 (defn solve [input]
   (->> input
-       (reduce steps [0 0 0])
-       (rest)
+       (reduce steps [0 0])
        (multiply)))
 
 (defn prepare [input-file]
@@ -24,4 +23,4 @@
 (defn -main [input-file]
   (solve (prepare input-file)))
 
-(-main "src/clj_aoc/2021/dec/02/input/part2.txt")
+(-main "src/clj_aoc/2021/02/input.txt")
