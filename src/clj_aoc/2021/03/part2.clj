@@ -22,8 +22,8 @@
 (defn rate [res-fn input]
   (->> (iterate #(bit-criteria res-fn %) [input 0])
        (map first) ;; Grabbing residues
-       (drop-while (comp #(> % 1) count))
-       (first) (first)))
+       (find-first (comp #(= % 1) count))
+       (first)))
 
 (def oxy-rate (partial rate oxy-res))
 

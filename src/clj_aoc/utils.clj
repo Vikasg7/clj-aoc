@@ -61,3 +61,10 @@
 
 (defn to-dec [str]
   (Integer/parseInt str 2))
+
+(defn find-first [pred coll]
+  (first (drop-while (complement pred) coll)))
+
+(defn separate-by [pred coll]
+  (let [mp (group-by pred coll)]
+  [(mp true) (mp false)]))
