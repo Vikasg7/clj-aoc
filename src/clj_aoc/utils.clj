@@ -65,6 +65,9 @@
 (defn find-first [pred coll]
   (first (drop-while (complement pred) coll)))
 
+(defn truthy? [val]
+  (if val true false))
+
 (defn separate-by [pred coll]
-  (let [mp (group-by pred coll)]
+  (let [mp (group-by (comp truthy? pred) coll)]
   [(mp true) (mp false)]))
