@@ -71,3 +71,13 @@
 (defn separate-by [pred coll]
   (let [mp (group-by (comp truthy? pred) coll)]
   [(mp true) (mp false)]))
+
+(defn take-until
+  "Returns a lazy sequence of successive items from coll until
+   (pred item) returns true, including that item. pred must be
+   free of side-effects."
+  [pred coll]
+    (when-let [s (seq coll)]
+      (if (pred (first s))
+        (lazy-seq (cons (first s) nil))
+        (lazy-seq (cons (first s) (take-until pred (rest s)))))))
