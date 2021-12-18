@@ -7,8 +7,8 @@
   (or (= x a) (= y b)))
 
 (defn path [[[x y] [a b]]]
-  (for [m (range (min x a) (inc (max x a)))
-        n (range (min y b) (inc (max y b)))]
+  (for [m (a-range x a)
+        n (a-range y b)]
   [m n]))
 
 (defn solve [input]

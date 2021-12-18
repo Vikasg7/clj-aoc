@@ -7,20 +7,14 @@
   (or (= x a) (= y b)))
 
 (defn straight-path [[[x y] [a b]]]
-  (for [m (range (min x a) (inc (max x a)))
-        n (range (min y b) (inc (max y b)))]
+  (for [m (a-range x a)
+        n (a-range y b)]
   [m n]))
 
-(defn diagonal-path 
-  ([[[x y :as f] [a b :as t]]]
-    (cond (and (> a x) (> b y)) (diagonal-path f t [1 1])
-          (and (< a x) (< b y)) (diagonal-path f t [-1 -1])
-          (< a x)               (diagonal-path f t [-1 1])
-          (< b y)               (diagonal-path f t [1 -1])
-          :else                 (throw "Unreachable diagonal-path")))
-  ([from-pos to-pos offset]
-    (->> (iterate (partial add-vec offset) from-pos)
-         (take-until (partial = to-pos)))))
+(defn diagonal-path [[[x y] [a b]]]
+  (let [m (a-range x a)
+        n (a-range y b)]
+  (mapv vector m n)))
 
 (defn path [points]
   (cond (straight? points) (straight-path points)

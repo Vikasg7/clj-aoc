@@ -81,3 +81,9 @@
       (if (pred (first s))
         (lazy-seq (cons (first s) nil))
         (lazy-seq (cons (first s) (take-until pred (rest s)))))))
+
+(defn a-range [start end]
+  "an better alternative to range function that is inclusive of end
+   and also works when end is less than start."
+  (cond (< end start) (range start (dec end) -1)
+        :else         (range start (inc end) 1)))
