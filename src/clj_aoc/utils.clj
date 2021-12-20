@@ -87,3 +87,6 @@
    and also works when end is less than start."
   (cond (< end start) (range start (dec end) -1)
         :else         (range start (inc end) 1)))
+
+(defn count-if [pred hay]
+  (count (filterv pred hay)))
