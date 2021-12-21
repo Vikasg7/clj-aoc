@@ -90,3 +90,12 @@
 
 (defn count-if [pred hay]
   (count (filterv pred hay)))
+
+(defn minmax [coll]
+  [(reduce min coll) (reduce max coll)])
+
+(defn minimum [coll]
+  (reduce min coll))
+
+(defn maximum [coll]
+  (reduce max coll))
