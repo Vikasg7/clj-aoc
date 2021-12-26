@@ -99,3 +99,16 @@
 
 (defn maximum [coll]
   (reduce max coll))
+
+(defn split-by
+  "split but for collections"
+  ([pred coll]
+    (when (seq coll) 
+      (split-by pred [] coll))) 
+  ([pred acc [fst & rst :as coll]]
+    (cond (empty? coll) (cons acc nil)
+          (pred fst)    (lazy-seq (cons acc (split-by pred [] rst)))
+          :else         (recur pred (conj acc fst) rst))))
+
+(defn one? [val]
+  (= val 1))
