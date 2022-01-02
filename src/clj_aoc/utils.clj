@@ -112,3 +112,6 @@
 
 (defn one? [val]
   (= val 1))
+
+(defn remove-keys [mp ks]
+  (reduce dissoc mp ks))
