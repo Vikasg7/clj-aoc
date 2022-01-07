@@ -25,6 +25,10 @@
 (defn multiply [as]
   (reduce * as))
 
+(defn median [coll]
+  (-> (sort coll)
+      (nth (quot (count coll) 2))))
+
 (defn to-int [n]
   (try (Long/parseLong (str n))
   (catch Exception e false)))
