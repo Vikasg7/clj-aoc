@@ -23,7 +23,7 @@
 
 (defn score [closing-seq]
   (->> (mapv char->score closing-seq)
-       (reduce #(-> %1 (* 5) (+ %2)))))
+       (reduce #(-> %1 (* 5) (+ %2)) 0)))
 
 (defn solve [input]
   (->> (keep closing-seq input)
