@@ -2,7 +2,7 @@
   (:require [clojure.pprint :refer [pprint]]))
 
 (defn debug [v]
-  (println v)
+  (pprint v)
   (identity v))
 
 (defn flip
@@ -93,7 +93,7 @@
         :else         (range start (inc end) 1)))
 
 (defn count-if [pred hay]
-  (count (filterv pred hay)))
+  (count (filter pred hay)))
 
 (defn minmax [coll]
   [(reduce min coll) (reduce max coll)])
@@ -119,3 +119,15 @@
 
 (defn remove-keys [mp ks]
   (reduce dissoc mp ks))
+
+(defn safe-nth [coll idx]
+  (try (nth coll idx)
+  (catch Exception e nil)))
+
+(defn nth-in [hay needles]
+  (reduce safe-nth hay needles))
+
+(defn fix-point [f x]
+  (let [y (f x)]
+  (if (= x y) x
+    (recur f y))))
