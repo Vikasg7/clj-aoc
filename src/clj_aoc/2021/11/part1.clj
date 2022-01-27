@@ -7,21 +7,17 @@
   (let [offsets [[0 1] [0 -1] [1 0] [-1 0] [1 1] [1 -1] [-1 1] [-1 -1]]]
   (->> offsets
        (mapv #(add-vec pos %))
-       (keep #(nth-in board %)))))
+       (keep board))))
 
-(defn map-cell [f board]
-  (for [r (range 0 (count board))]
-  (for [c (range 0 (count (first board)))]
-    (f (nth-in board [r c])))))
-      
-(defn map-cell-indexed [f board]
-  (for [r (range 0 (count board))]
-  (for [c (range 0 (count (first board)))]
-    (f [r c] (nth-in board [r c])))))
+(defn make-board [input]
+  (into {}
+  (for [r (range 0 (count input))
+        c (range 0 (count (first input)))]
+    [[r c] (nth-in input [r c])])))
 
 (defn flash
   ([board]
-    (map-cell-indexed (partial flash board) board))
+    (map-kv (partial flash board) board))
   ([board pos curr]
     (cond (zero? curr)  0 ;; already flashed
           (> curr 9)    0 ;; just flashed
@@ -30,14 +26,16 @@
                         (+ curr xtra)))))
 
 (defn step [board]
-  (->> (map-cell inc board)
+  (->> (update-vals board inc)
        (fix-point flash)))
 
-(defn solve [board]
+(defn solve [input]
+  (let [board (make-board input)]
   (->> (rest (iterate step board))
        (take 100)
+       (map vals)
        (flatten)
-       (count-if zero?)))
+       (count-if zero?))))
 
 (defn prepare [input-file]
   (->> (slurp input-file)

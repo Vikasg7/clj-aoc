@@ -131,3 +131,7 @@
   (let [y (f x)]
   (if (= x y) x
     (recur f y))))
+
+(defn map-kv [f mp]
+  (let [step (fn [m k v] (assoc m k (f k v)))]
+  (reduce-kv step (empty mp) mp)))
