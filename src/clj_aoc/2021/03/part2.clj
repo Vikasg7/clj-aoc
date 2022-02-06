@@ -14,20 +14,18 @@
   (let [[os zs] (mapv grp [1 0])]
   (if (<= (count zs) (count os)) zs os)))
 
-(defn bit-criteria [res-fn [input idx]]
-  (let [grp (group-by #(nth % idx) input)
-        res (res-fn grp)]
-  [res (inc idx)]))
+(defn bit-criteria [res-fn idx input]
+  (->> (group-by #(nth % idx) input)
+       (res-fn)))
 
-(defn rate [res-fn input]
-  (->> (iterate #(bit-criteria res-fn %) [input 0])
-       (map first) ;; Grabbing residues
-       (find-first (comp #(= % 1) count))
-       (first)))
+(defn rate [res-fn idx input]
+  (let [res (bit-criteria res-fn idx input)]
+  (cond (one? (count res)) (first res)
+        :else              (recur res-fn (inc idx) res))))
 
-(def oxy-rate (partial rate oxy-res))
+(def oxy-rate (partial rate oxy-res 0))
 
-(def co2-rate (partial rate co2-res))
+(def co2-rate (partial rate co2-res 0))
 
 (defn solve [input]
   (* (rate->dec (oxy-rate input))
