@@ -18,14 +18,17 @@
   (->> (group-by #(nth % idx) input)
        (res-fn)))
 
-(defn rate [res-fn idx input]
-  (let [res (bit-criteria res-fn idx input)]
-  (cond (one? (count res)) (first res)
-        :else              (recur res-fn (inc idx) res))))
+(defn rate 
+  ([res-fn input]
+    (rate res-fn 0 input))
+  ([res-fn idx input]
+    (let [res (bit-criteria res-fn idx input)]
+    (cond (one? (count res)) (first res)
+          :else              (recur res-fn (inc idx) res)))))
 
-(def oxy-rate (partial rate oxy-res 0))
+(def oxy-rate (partial rate oxy-res))
 
-(def co2-rate (partial rate co2-res 0))
+(def co2-rate (partial rate co2-res))
 
 (defn solve [input]
   (* (rate->dec (oxy-rate input))
