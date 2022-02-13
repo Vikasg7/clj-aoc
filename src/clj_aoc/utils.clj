@@ -135,3 +135,9 @@
 (defn map-kv [f mp]
   (let [step (fn [m k v] (assoc m k (f k v)))]
   (reduce-kv step (empty mp) mp)))
+
+(defn upper-case? [^Character c]
+  (Character/isUpperCase c))
+
+(defn lower-case? [^Character c]
+  (Character/isLowerCase c))
