@@ -141,3 +141,10 @@
 
 (defn lower-case? [^Character c]
   (Character/isLowerCase c))
+
+(defn unravel [n s]
+  [(take-nth n s) (take-nth n (rest s))])
+
+(defn map-if [pred f coll]
+  (let [mapper (fn [x] (if (pred x) (f x) x))]
+  (map mapper coll)))
