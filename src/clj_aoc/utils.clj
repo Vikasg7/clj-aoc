@@ -41,19 +41,17 @@
 (defn read-strs [xs]
   (mapv read-str xs))
 
-(defn pairs [[fst & rst]]
-    (for [r rst] [fst r]))
+(defn combos
+  ([n xs]
+    (combos n xs []))
+  ([n [f & r :as xs] c]
+    (cond (= n (count c)) [c] 
+          (empty? xs)     []
+          :else           (concat (combos n r (conj c f))
+                                  (combos n r c)))))
 
-(defn combos-of
-  "Way faster than math.combinatorics/combinations"
-  ([size xs]
-    (->> (iterate rest xs)
-         (take (inc (- (count xs) size)))
-         (mapcat (partial combos-of (dec size) _))))
-  ([size _ [fst & rst :as xs]]
-    (cond (= 1 size) (pairs xs)
-          :else      (->> (combos-of size rst)
-                          (mapv (partial cons fst))))))
+(defn pairs [n xs]
+  (partition n 1 xs))
 
 (defn in-range? [mn mx x]
   (and (>= x mn) (<= x mx)))
@@ -146,5 +144,12 @@
   [(take-nth n s) (take-nth n (rest s))])
 
 (defn map-if [pred f coll]
-  (let [mapper (fn [x] (if (pred x) (f x) x))]
-  (map mapper coll)))
+  (let [f (fn [x] (if (pred x) (f x) x))]
+  (map f coll)))
+
+(defn zip [[a & as] [b & bs]]
+  "interleave but for un-equal sized lists"
+  (lazy-seq
+    (cond (and a b) (cons a (cons b (zip as bs)))
+          a         (cons a (zip as bs))
+          b         (cons b (zip as bs)))))
