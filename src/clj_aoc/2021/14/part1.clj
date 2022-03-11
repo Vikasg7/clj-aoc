@@ -8,15 +8,14 @@
        (mapcat rules)
        (zip tmplt)))
 
-(defn calc-result [[min max]]
-  (- max min))
+(defn calc-result [freqs]
+  (let [[min max] (minmax (vals freqs))]
+  (- max min)))
 
 (defn solve [[tmplt rules]]
   (-> (iterate (partial process rules) tmplt)
       (nth 10)
       (frequencies)
-      (vals)
-      (minmax)
       (calc-result)))
 
 (defn prepare [input-file]
