@@ -16,7 +16,7 @@
         freqs (interleave (vals m) (vals m))]
   (->> (map hash-map eles freqs)
        (apply merge-with +)
-       (flip update-vals #(Math/round (double (/ % 2)))))))
+       (flip update-vals #(round (/ % 2))))))
 
 (defn calc-result [freqs]
   (let [[min max] (minmax (vals freqs))]

@@ -153,3 +153,6 @@
     (cond (and a b) (cons a (cons b (zip as bs)))
           a         (cons a (zip as bs))
           b         (cons b (zip as bs)))))
+
+(defn round [n]
+  (Math/round (double n)))
