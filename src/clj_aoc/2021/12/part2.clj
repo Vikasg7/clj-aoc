@@ -12,12 +12,13 @@
        (flip dissoc "end"))))
 
 (defn visited? [[cave & path]]
-  (let [visits  (->> (remove (comp upper-case? first) path)
-                     (frequencies))
-        ;; checking other small caves for twice
-        twice?  (some #{2} (vals (dissoc visits cave)))]
-  (or (= (visits cave) 2)
-      (when twice? (= (visits cave) 1)))))
+  (when (lower-case? (first cave))
+    (let [visits  (->> (remove (comp upper-case? first) path)
+                       (frequencies))]
+    (or (= (visits cave) 2)
+        (when ;; checking other small caves for twice
+              (some #{2} (vals (dissoc visits cave)))
+          (= (visits cave) 1))))))
 
 (defn paths [[path :as open] cave-map]
   (when-not (empty? open)
