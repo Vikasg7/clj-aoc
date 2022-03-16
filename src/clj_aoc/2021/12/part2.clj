@@ -11,7 +11,7 @@
                                #(mapv second %)))
        (flip dissoc "end"))))
 
-(defn visited? [cave path]
+(defn visited? [[cave & path]]
   (let [visits  (->> (remove (comp upper-case? first) path)
                      (frequencies))
         ;; checking other small caves for twice
@@ -20,20 +20,13 @@
       (when twice? (= (visits cave) 1)))))
 
 (defn paths [[path :as open] cave-map]
-  (let [cave  (first path)
-        nopen (->> (cave-map cave)
-                   ;; expanding current path
-                   (map #(cons % path))
-                   ;; not using flip overflows stack,
-                   ;; coz we need to process current path first
-                   ;; before moving on to the next one
-                   (flip concat (rest open)))] 
-  (cond (empty? open)   nil
-        (= cave "end")  (lazy-seq (cons path (paths nopen cave-map)))
-        :else           (let [small?   (lower-case? (first cave))
-                              visited? (when small? (visited? cave (rest path)))]
-                        (cond visited? (recur (rest open) cave-map)
-                              :else    (recur nopen cave-map))))))
+  (when-not (empty? open)
+    (let [cave     (first path)
+          more     (->> (cave-map cave)
+                        (map #(cons % path)))]
+    (cond (= cave "end")  (lazy-seq (cons path (paths (rest open) cave-map)))
+          (visited? path) (recur (rest open) cave-map)
+          :else           (recur (concat more (rest open)) cave-map)))))
 
 (defn solve [input]
   (count (paths [["start"]] (cave-map input))))
