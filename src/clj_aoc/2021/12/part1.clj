@@ -15,17 +15,17 @@
   (when (lower-case? (first cave))
     (some #{cave} path)))
 
-(defn paths [[path :as open] cave-map]
+(defn paths [cave-map [path :as open]]
   (when-not (empty? open)
     (let [cave     (first path)
           more     (->> (cave-map cave)
                         (map #(cons % path)))]
-    (cond (= cave "end")  (lazy-seq (cons path (paths (rest open) cave-map)))
-          (visited? path) (recur (rest open) cave-map)
-          :else           (recur (concat more (rest open)) cave-map)))))
+    (cond (= cave "end")  (lazy-seq (cons path (paths cave-map (rest open))))
+          (visited? path) (recur cave-map (rest open))
+          :else           (recur cave-map (concat more (rest open)))))))
 
 (defn solve [input]
-  (count (paths [["start"]] (cave-map input))))
+  (count (paths (cave-map input) [["start"]])))
 
 (defn prepare [input-file]
   (->> (slurp input-file)
