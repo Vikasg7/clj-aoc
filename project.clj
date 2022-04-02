@@ -5,7 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.11.0-alpha4"]
                  [org.clojure/core.match "1.0.0"]
-                 [org.clojure/math.combinatorics "0.1.6"]]
+                 [org.clojure/data.priority-map "1.1.0"]]
   :main ^:skip-aot clj-aoc.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all

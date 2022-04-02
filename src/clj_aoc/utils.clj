@@ -156,3 +156,6 @@
 
 (defn round [n]
   (Math/round (double n)))
+
+(defn has? [n ^java.util.Collection h]
+  (.contains h n))
