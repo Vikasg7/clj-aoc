@@ -24,6 +24,11 @@
         cost    (sum (cons t1-cost (mapv quot pnt dims)))]
   (-> cost (- 1) (mod 9) (+ 1))))
 
+(defn neighs-with-cost [cost dest [cur d]]
+  (let [n  (neighs dest cur)
+        di (mapv (comp #(+ d %) cost) n)]
+  (zipmap n di)))
+
 (defn dijkstra
   ([board t1-dims size]
     (let [src     [0 0]
@@ -31,17 +36,15 @@
           tn-dims (mapv #(* % size) t1-dims)
           dest    (mapv dec tn-dims)
           cost    (partial cost board t1-dims)]
-    (dijkstra board cost dest que {})))
-  ([board cost dest que dist]
+    (dijkstra cost dest que {})))
+  ([cost dest que dist]
     (let [[cur d] (peek que)]
     (cond (empty? que)  (dist dest)
-          (dist cur)    (recur board cost dest (pop que) dist)
-          :else         (let [ndi   (neighs dest cur)
-                              di    (mapv (comp #(+ d %) cost) n)
-                              ndi   (zipmap n di)
-                              que'  (merge-with min (pop que) ndi)
+          (dist cur)    (recur cost dest (pop que) dist)
+          :else         (let [que'  (->> (neighs-with-cost cost dest [cur d])
+                                         (merge-with min (pop que)))
                               dist' (assoc dist cur d)]
-                        (recur board cost dest que' dist'))))))
+                        (recur cost dest que' dist'))))))
 
 (defn solve [input]
   (let [rows (count input)

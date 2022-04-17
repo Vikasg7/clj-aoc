@@ -19,22 +19,29 @@
        (mapv (partial add-vec pnt))
        (filterv (partial in-board? [0 0] dest))))
 
+(defn cost [board pnt]
+  (board pnt))
+
+(defn neighs-with-cost [cost dest [cur d]]
+  (let [n  (neighs dest cur)
+        di (mapv (comp #(+ d %) cost) n)]
+  (zipmap n di)))
+
 (defn dijkstra
   ([board]
     (let [src  [0 0]
           dest (key (last board))
-          que  (priority-map src 0)]
-    (dijkstra board dest que {})))
-  ([board dest que dist]
+          que  (priority-map src 0)
+          cost (partial cost board)]
+    (dijkstra cost dest que {})))
+  ([cost dest que dist]
     (let [[cur d] (peek que)]
     (cond (empty? que)  (dist dest)
-          (dist cur)    (recur board dest (pop que) dist)
-          :else         (let [n     (neighs dest cur)
-                              di    (mapv (comp #(+ d %) board) n)
-                              ndi   (zipmap n di)
-                              que'  (merge-with min (pop que) ndi)
+          (dist cur)    (recur cost dest (pop que) dist)
+          :else         (let [que'  (->> (neighs-with-cost cost dest [cur d])
+                                         (merge-with min (pop que)))
                               dist' (assoc dist cur d)]
-                        (recur board dest que' dist'))))))
+                        (recur cost dest que' dist'))))))
 
 (defn solve [input]
   (dijkstra (make-board input)))
